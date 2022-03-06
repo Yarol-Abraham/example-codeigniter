@@ -8,6 +8,13 @@ class UsersModel extends CI_Model {
         $res = $this->db->query("SELECT * FROM usuarios WHERE id='{$id}'");
         return $res->result();
     }
+
+    public function getAll()
+    {
+        $res = $this->db->query("SELECT * FROM usuarios");
+        return $res->result();
+    }
+    
     
     public function create($nombre, $correo, $password_user)
     {
