@@ -38,8 +38,9 @@ class UsersController extends CI_Controller {
 	{   
         $method = $_SERVER['REQUEST_METHOD'];
         if($method != 'POST') return json_output(400,array('status' => 400,'message' => 'No.'));
-      
-        $response = $this->UsersModel->create($_POST['nombre'],$_POST['correo'], $_POST['password_user']);
+        $inputJSON = file_get_contents('php://input');
+        $data = json_decode($inputJSON, true);
+        $response = $this->UsersModel->create($data['nombre'],$data['correo'], $data['password_user']);
         if($response['status'] == 400) return json_output(400,array('status' => 200,'message' => 'No.'));
         
         json_output($response['status'],array('status' => 200,'message' => $response['message']));
