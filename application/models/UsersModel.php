@@ -34,4 +34,13 @@ class UsersModel extends CI_Model {
         return ['status' => 400,'message' => 'Nop.']; 
     }
 
+    public function delete($id)
+    {
+        $consulta=$this->db->query("DELETE FROM usuarios WHERE id='$id' ");
+        
+        if($consulta) return ['status' => 201,'message' => 'Usuario eliminado.'];
+        
+        return ['status' => 400,'message' => 'Nop.']; 
+    }
+
 }

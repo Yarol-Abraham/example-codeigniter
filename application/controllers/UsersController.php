@@ -17,12 +17,18 @@ class UsersController extends CI_Controller {
         parent::__construct();
     }
 
-	public function get() // get for id
+	public function get($id) // get for id
 	{   
         
         $method = $_SERVER['REQUEST_METHOD'];
         if($method != 'GET') return json_output(400,array('status' => 400,'message' => 'No.'));
-        $response = $this->UsersModel->get($_GET["id"]);
+        $response = $this->UsersModel->get($id);
+        
+        if(empty($response))
+        {
+            return json_output(200, array("fail" => 0));
+        }
+
         json_output(200,$response[0]);
 	}
 
@@ -51,11 +57,22 @@ class UsersController extends CI_Controller {
         $method = $_SERVER['REQUEST_METHOD'];
 		if($method != 'PUT') return json_output(400,array('status' => 400,'message' => 'Bad request.'));
         $params = file_get_contents('php://input');
-        debugin($params);
-        $response = $this->UsersModel->update($_POST['nombre'],$_POST['correo'], $_GET['id']);
+        $data = json_decode($params, true);
+        debugin($data);
+        $response = $this->UsersModel->update($data['nombre'],$data['correo'], $_GET['id']);
         if($response['status'] == 400) return json_output(400,array('status' => 200,'message' => 'No.'));
         
         json_output($response['status'],array('status' => 200,'message' => $response['message']));
 		
+    }
+
+    public function delete()
+    {
+        $method = $_SERVER['REQUEST_METHOD'];
+		if($method != 'DELETE') return json_output(400,array('status' => 400,'message' => 'Bad request.'));
+        $response = $this->UsersModel->delete($_GET['id']);
+        if($response['status'] == 400) return json_output(400,array('status' => 200,'message' => 'No.'));
+        
+        json_output($response['status'],array('status' => 200,'message' => $response['message']));
     }
 }
